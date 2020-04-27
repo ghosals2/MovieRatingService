@@ -17,18 +17,19 @@ import com.example.demo.Model.UserMapping;
 @Service
 public class RatingsAggregator {
 	
-	@Autowired
-	Rating rating;
+	
+	
 	@Value("${movieproperty}")
 	String movieproperties;
 	
-	UserMapping usermapping;
-	List<UserMapping> usermappinglist=new ArrayList<>();
+	
+	
 	
 	public RatingList getMovieRatings(String userId)throws Exception
 	{
 		RatingList finallist=new RatingList();
 		List<Rating> ratinglist=new ArrayList<Rating>();
+		List<UserMapping> usermappinglist=new ArrayList<>();
 		Map<String,Integer> moviemap=new HashMap<String,Integer>();
 		moviemap.put("s1",4);
 		moviemap.put("s2",5);
@@ -49,23 +50,25 @@ public class RatingsAggregator {
 		StringTokenizer st=new StringTokenizer(movieproperties,",");
 		while(st.hasMoreElements()) {
 			String[] um=st.nextToken().split("-");
-			usermapping= new UserMapping(um[0],um[1]);
+			UserMapping usermapping= new UserMapping(um[0],um[1]);
 			//System.out.println(usermapping);
 			usermappinglist.add(usermapping);
-			//System.out.println(usermapping);
+			
 			
 		}
+		System.out.println(usermappinglist);
 		
 		if(null!=userId)
 		{
 			for(int i=0;i<usermappinglist.size();i++) {
 				if(usermappinglist.get(i).getUserId().equals(userId)) {
+					Rating rating=new Rating();
 					rating.setMovieId(usermappinglist.get(i).getMovieId());
 					rating.setRating(moviemap.get(usermappinglist.get(i).getMovieId()));
 					ratinglist.add(rating);
-					finallist.setListofrating(ratinglist);
+					
 					System.out.println(ratinglist);
-					System.out.println(finallist);
+					
 				}
 				
 			}
@@ -79,6 +82,7 @@ public class RatingsAggregator {
 		else
 			throw new Exception();
 		//ratinglist.add(rating);
+		finallist.setListofrating(ratinglist);
 		
 		
 		return finallist;
